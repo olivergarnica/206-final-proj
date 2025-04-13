@@ -1,5 +1,5 @@
 # Group Name: Kappa
-# Group Memberes: 
+# Group Memberes: Kanishk, Kibrom, Oliver
 
 import os
 import json
@@ -11,4 +11,4 @@ from databases import APIdatamanager
 import time
 
 def main():
-    db_manager = APIdatamanager(db_path="data.db")
+    db_manager = APIdatamanager(db_path="")

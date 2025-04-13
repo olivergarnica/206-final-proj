@@ -25,11 +25,11 @@ class APIdatamanager:
         """)
 
     def insert_finnhub_data(self, api_response):
-        # The response contains 'symbol' at the top level and a list of transactions in 'data'
+        # Response contains 'symbol' at the top level and a list of transactions in 'data'
         symbol = api_response.get("symbol")
         transactions = api_response.get("data", [])
         
-        for entry in transactions[:25]:  # Insert only the first 25 transactions per run
+        for entry in transactions[:25]:  # Insert only the first 25 transactions per run per instructions
             self.cur.execute("""
                 INSERT OR IGNORE INTO insiders
                 (name, symbol, num_shares_after, change_of_shares, avg_transaction_price, transaction_date, filing_date, transaction_code)
