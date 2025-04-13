@@ -1,11 +1,9 @@
-# insider.py
 import requests
 import finnhub
 
 from datetime import date, timedelta
 
-# API Key and Finnhub client
-FH_KEY = ""  # INSERT YOUR FINNHUB API KEY HERE
+FH_KEY = "" # ADD KEY
 finnhub_client = finnhub.Client(FH_KEY)
 
 # Stock tickers by cap level
@@ -15,7 +13,6 @@ stock_tickers = {
     "Lowcap": ["PLTR", "ZEN", "SMG", "ADBE"]
 }
 
-# Data fetcher
 def fetch_finnhub_transactions(symbol, api_key, from_date=None, to_date=None, limit=25):
     url = "https://finnhub.io/api/v1/stock/insider-transactions"
     params = {

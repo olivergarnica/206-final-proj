@@ -1,26 +1,4 @@
-import requests
 import sqlite3
-import finnhub
-from insider import fetch_finnhub_transactions, stock_tickers, FH_KEY
-import time
-"""
-A. Must access three APIs. This is worth 10 points. 
- 
-B. Access and store at least 100 rows in your database from each API/website 10 points. 
- 
-C. For at least one API you must have two tables that share an integer key 20 points. 
-You must not have duplicate string data in your database! Do not just split data 
-from one table into two! Also, there should be only one final database! 
- 
-D. You must limit how much data you store from an API into the database each time 
-you execute the file that stores data to the database to 25 or fewer items (60 points). 
-The data must be stored in a SQLite database. This means that you must run the file 
-that stores the data multiple times to gather at least 100 items total without 
-duplicating any data or changing the source code.
-"""
-
-"""Insider trading tends to be after quarterly earning reports. Maybe compare how they trade
-vs earnings reports and what kind of trades they execute during these times."""
 
 class APIdatamanager:
     def __init__(self, db_path="data.db"):
@@ -45,7 +23,7 @@ class APIdatamanager:
                 UNIQUE(name, symbol, transaction_date)
             );
         """)
-    
+
     def insert_finnhub_data(self, api_response):
         # The response contains 'symbol' at the top level and a list of transactions in 'data'
         symbol = api_response.get("symbol")
