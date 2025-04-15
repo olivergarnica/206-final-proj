@@ -1,5 +1,5 @@
 # Group Name: Kappa
-# Group Memberes: Kanishk, Kibrom, Oliver
+# Group Members: Kanishk, Kibrom, Oliver
 
 import os
 import json
