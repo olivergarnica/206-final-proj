@@ -3,7 +3,7 @@ import finnhub
 
 from datetime import date, timedelta
 
-FH_KEY = "cvvi5n1r01qi0bq5g0c0cvvi5n1r01qi0bq5g0cg" # ADD KEY
+FH_KEY = "cvvi5n1r01qi0bq5g0c0cvvi5n1r01qi0bq5g0cg"
 finnhub_client = finnhub.Client(FH_KEY)
 
 # Stock tickers by cap level

@@ -14,7 +14,7 @@ def main():
     db_manager = APIdatamanager(db_path="all_data.db")
 
     try:
-        # Process finnhab insider data
+        # Process finnhub insider data
         print("\nFetching insider trading data...")
         for cap_level in stock_tickers:
             print(f"Processing {cap_level} cap stocks:")
@@ -25,7 +25,7 @@ def main():
                     insider_data = fetch_finnhub_transactions(symbol, FH_KEY)
                     db_manager.insert_finnhub_data(insider_data)
                     print("Success")
-                    time.sleep(1)
+                    time.sleep(4)
                 except Exception as e:
                     print(f"Failure (Error: {str(e)})")
         
@@ -40,7 +40,7 @@ def main():
                     market_data = fetch_marketstack_data(symbol, FH_KEY)
                     db_manager.insert_marketstack_data(market_data)
                     print("Success")
-                    time.sleep(1)
+                    time.sleep(2)
                 except Exception as e:
                     print(f"Failure (Error: {str(e)})")
         
