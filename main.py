@@ -1,6 +1,6 @@
 # Group Name: Kappa
 # Group Members: Kanishk, Kibrom, Oliver
-
+import os
 from insider import fetch_finnhub_transactions, stock_tickers, FH_KEY
 from databases import APIdatamanager
 from econ import fetch_econdb_data
@@ -27,7 +27,7 @@ def main():
                     print("Success")
                     time.sleep(1)
                 except Exception as e:
-                     print(f"Failure (Error: {str(e)})")
+                    print(f"Failure (Error: {str(e)})")
         
         # Process marketstack data
         print("\nFetching stock market data...")
@@ -42,14 +42,16 @@ def main():
                     print("Success")
                     time.sleep(1)
                 except Exception as e:
-                     print(f"Failure (Error: {str(e)})")
+                    print(f"Failure (Error: {str(e)})")
         
         # Process economic data
         print("\nFetching economic indicators...")
         try:
             econ_data = fetch_econdb_data()
+            #print(econ_data)
             db_manager.insert_econdb_data(econ_data)
             print("Economic data saved successfully!")
+            db_manager.conn.commit()
         except Exception as e:
             print(f"Failed to save economic data: {str(e)}")
 

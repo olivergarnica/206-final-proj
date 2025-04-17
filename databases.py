@@ -14,7 +14,6 @@ class APIdatamanager:
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 name TEXT,
                 symbol TEXT,
-                position TEXT,
                 UNIQUE(name, symbol)
             );
         """)
@@ -72,9 +71,9 @@ class APIdatamanager:
 
             # Insert or ignore the insider
             self.cur.execute("""
-                INSERT OR IGNORE INTO insiders (name, symbol, position)
-                VALUES (?, ?, ?)
-            """, (name, symbol, position))
+                INSERT OR IGNORE INTO insiders (name, symbol)
+                VALUES (?, ?)
+            """, (name, symbol))
 
             # Get the insider's ID
             self.cur.execute("""
@@ -102,23 +101,24 @@ class APIdatamanager:
             ))
 
     def insert_econdb_data(self, data):
-        datasets = data.get("datasets", {})
+        for series_json in data.get("series", []):
+            code = series_json.get("ticker")
+            if not code:
+                continue
 
-        for indicator_code, content in datasets.items():
-            entries = content.get("data", [])
+            d = series_json.get("data", {})
+            dates  = d.get("dates",  [])
+            values = d.get("values", [])
 
-            for row in entries[:25]:
-                date, value = row
-                self.cur.execute("""
+            for date, value in list(zip(dates, values))[:25]:
+                self.cur.execute(
+                    """
                     INSERT OR IGNORE INTO macroeconomic_indicators
                     (indicator, date, value)
                     VALUES (?, ?, ?)
-                """, (
-                    indicator_code,
-                    date,
-                    value
-                ))
-
+                    """,
+                    (code, date, value)
+                )
 
     def insert_marketstack_data(self, data):
         entries = data.get("data", [])
