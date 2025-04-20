@@ -8,9 +8,9 @@ finnhub_client = finnhub.Client(FH_KEY)
 
 # Stock tickers by cap level
 stock_tickers = {
-    "Highcap": ["AAPL", "MSFT", "AMZN", "GOOGL", "TSLA", "META", "TSM"],
-    "Midcap": ["DOCU", "TWLO", "ZM", "NET", "TEAM", "SQ"],
-    "Lowcap": ["PLTR", "ZEN", "SMG", "ADBE"]
+    "Highcap": ["AAPL", "MSFT", "GOOGL", "META"],
+    "Midcap": ["DOCU", "TWLO", "ZM", "TEAM"],
+    "Lowcap": ["PLTR", "SMG", "ADBE"]
 }
 
 def fetch_finnhub_transactions(symbol, api_key, from_date=None, to_date=None, limit=25):

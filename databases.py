@@ -116,10 +116,11 @@ class APIdatamanager:
                     INSERT OR IGNORE INTO macroeconomic_indicators
                     (indicator, date, value)
                     VALUES (?, ?, ?)
-                    """,
+                """,
                     (code, date, value)
                 )
 
+    
     def insert_marketstack_data(self, data):
         entries = data.get("data", [])
 
