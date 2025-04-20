@@ -5,7 +5,7 @@ from insider import fetch_finnhub_transactions, stock_tickers, FH_KEY
 from databases import APIdatamanager
 from econ import fetch_econdb_data
 from marketstack import fetch_marketstack_data
-from analysis import calculate_and_write_pnl
+from analysis import *
 import time
 
 def main():
@@ -64,6 +64,7 @@ def main():
 
     # Call analysis 
     calculate_and_write_pnl(db_path="all_data.db", output_path="trade_pnls.txt")
+    analyze_pnls_by_company(pnl_file_path="trade_pnls.txt", output_path="company_pnl_summary.txt")
 
 
 if __name__ == "__main__":

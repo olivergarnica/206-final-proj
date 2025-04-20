@@ -1,5 +1,6 @@
 import sqlite3
 from datetime import datetime, timedelta
+import csv
 
 def calculate_and_write_pnl(db_path="all_data.db", output_path="trade_pnls.txt"):
     conn = sqlite3.connect(db_path)
@@ -53,9 +54,37 @@ def calculate_and_write_pnl(db_path="all_data.db", output_path="trade_pnls.txt")
 
     # Write results to file
     with open(output_path, "w") as f:
-        f.write("trade_id\tinsider_name\tsymbol\ttxn_code\ttransaction_date\ttxn_price\tshares\tprice+1day\tPnL\n")
+        f.write("trade_id\tinsider_name\tsymbol\ttxn_code\ttransaction_date\ttxn_price\tshares\tprice+7day\tPnL\n")
         for row in results:
             f.write("\t".join(str(x) if x is not None else "N/A" for x in row) + "\n")
 
     print(f"PnL written for {len(results)} trades to {output_path}")
     conn.close()
+
+def analyze_pnls_by_company(pnl_file_path="trade_pnls.txt", output_path="company_pnl_summary.txt"):
+    company_pnls = {}
+
+    # Open the PnL file as a tab‑delimited CSV
+    with open(pnl_file_path, newline="") as f:
+        reader = csv.DictReader(f, delimiter="\t")
+        for row in reader:
+            symbol = row["symbol"]
+            pnl_str = row["PnL"]
+
+            try:
+                pnl = float(pnl_str)
+            except ValueError:
+                continue  # skip header or bad lines
+
+            company_pnls.setdefault(symbol, []).append(pnl)
+
+    # Write summary to output file
+    with open(output_path, "w", newline="") as out:
+        writer = csv.writer(out, delimiter="\t")
+        writer.writerow(["symbol", "num_trades", "avg_pnl"])
+        for symbol in sorted(company_pnls):
+            pnls = company_pnls[symbol]
+            avg_pnl = round(sum(pnls) / len(pnls), 2)
+            writer.writerow([symbol, len(pnls), avg_pnl])
+
+    print(f"Company-wise PnL summary written to {output_path}")

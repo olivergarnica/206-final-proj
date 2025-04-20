@@ -1,4 +1,4 @@
-trade_id	insider_name	symbol	txn_code	transaction_date	txn_price	shares	price+1day	PnL
+trade_id	insider_name	symbol	txn_code	transaction_date	txn_price	shares	price+7day	PnL
 1	WILLIAMS JEFFREY E	AAPL	S	2025-04-02	225.03	-2480	198.85	64926.4
 4	Adams Katherine L.	AAPL	S	2025-04-02	224.62	-5648	198.85	145548.96
 8	COOK TIMOTHY D	AAPL	S	2025-04-02	224.76	-10590	198.85	274386.9
