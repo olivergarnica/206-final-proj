@@ -100,26 +100,26 @@ class APIdatamanager:
                 entry.get("transactionCode")
             ))
 
-    def insert_econdb_data(self, data):
+    def insert_econdb_data(self, data, limit=25):
         for series_json in data.get("series", []):
             code = series_json.get("ticker")
             if not code:
                 continue
 
-            d = series_json.get("data", {})
-            dates  = d.get("dates",  [])
-            values = d.get("values", [])
+            dates  = series_json.get("data", {}).get("dates",  [])
+            values = series_json.get("data", {}).get("values", [])
 
-            for date, value in list(zip(dates, values))[:25]:
+            recent_pairs = list(zip(dates, values))[-limit:]
+
+            for date, value in recent_pairs:
                 self.cur.execute(
                     """
                     INSERT OR IGNORE INTO macroeconomic_indicators
                     (indicator, date, value)
                     VALUES (?, ?, ?)
-                """,
+                    """,
                     (code, date, value)
                 )
-
     
     def insert_marketstack_data(self, data):
         entries = data.get("data", [])
