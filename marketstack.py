@@ -1,6 +1,6 @@
 import requests
 
-MS_KEY = "b7a17ae1fb3914c63bb1dde8980687f5"  
+MS_KEY = "34963469d75cf929279dacad14cca36d"  
 
 def fetch_marketstack_data(symbol, limit=25):
     url = "http://api.marketstack.com/v1/eod"

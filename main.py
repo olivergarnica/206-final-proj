@@ -38,7 +38,7 @@ def main():
                 print(f" -- {symbol}", end=" ")
                 
                 try:
-                    market_data = fetch_marketstack_data(symbol, FH_KEY)
+                    market_data = fetch_marketstack_data(symbol)
                     db_manager.insert_marketstack_data(market_data)
                     print("Success")
                     time.sleep(2)
