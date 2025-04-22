@@ -61,7 +61,7 @@ stock_choice = ['AAPL', 'MSFT', 'GOOGL', 'META', 'DOCU', 'TWLO', 'ZM', 'TEAM', '
 print("Choose a stock from:", stock_choice)
 stock = input("Enter your stock choice: ").upper()
 
-indicators = ["RGDPUS", "CPIUS", "M3YDUS"]
+indicators = ["CPIUS", "M3YDUS"]
 
 # Monthly percent change
 def get_monthly_percent_change(df, value_col="value", date_col="date"):
