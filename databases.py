@@ -122,8 +122,8 @@ class APIdatamanager:
                     (code, date, value)
                 )
     
-    def insert_marketstack_data(self, data):
-        entries = data.get("data", [])
+    def insert_marketstack_data(self, data, limit = 25):
+        entries = data.get("data", [])[:limit]
 
         for entry in entries:
             self.cur.execute("""
