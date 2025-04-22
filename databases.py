@@ -8,13 +8,32 @@ class APIdatamanager:
         self._create_tables()  # Set up the database immediately
 
     def _create_tables(self):
-        # Create the table for each insider
+        # # Create the table for each insider
+        # self.cur.execute("""
+        #     CREATE TABLE IF NOT EXISTS insiders (
+        #         id INTEGER PRIMARY KEY AUTOINCREMENT,
+        #         name TEXT,
+        #         symbol TEXT,
+        #         UNIQUE(name, symbol)
+        #     );
+        # """)
+
+        # New table to store unique company symbols
+        self.cur.execute("""
+            CREATE TABLE IF NOT EXISTS companies (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                symbol TEXT UNIQUE
+            );
+        """)
+
+        # Updated insiders table to reference companies by id
         self.cur.execute("""
             CREATE TABLE IF NOT EXISTS insiders (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 name TEXT,
-                symbol TEXT,
-                UNIQUE(name, symbol)
+                company_id INTEGER,
+                UNIQUE(name, company_id),
+                FOREIGN KEY(company_id) REFERENCES companies(id)
             );
         """)
 
@@ -63,6 +82,20 @@ class APIdatamanager:
 
     def insert_finnhub_data(self, transactions, symbol):
         inserts_done = 0
+
+        # check if the company exists in the table, insert otherwise
+        self.cur.execute("""
+            INSERT OR IGNORE INTO companies (symbol)
+            VALUES (?)
+        """, (symbol,))
+        
+        self.cur.execute("SELECT id FROM companies WHERE symbol = ?", (symbol,))
+        company_result = self.cur.fetchone()
+        
+        if not company_result:
+            return
+        company_id = company_result[0]
+        
         for entry in sorted(transactions, key=lambda x: x.get("transactionDate")):
             if inserts_done >= 25:
                 break
@@ -71,13 +104,13 @@ class APIdatamanager:
             position = entry.get("position") or "Unknown"
 
             self.cur.execute("""
-                INSERT OR IGNORE INTO insiders (name, symbol)
-                VALUES (?, ?)
-            """, (name, symbol))
+                INSERT OR IGNORE INTO insiders (name, company_id, position)
+                VALUES (?, ?, position)
+            """, (name, company_id, position))
 
             self.cur.execute("""
-                SELECT id FROM insiders WHERE name = ? AND symbol = ?
-            """, (name, symbol))
+                SELECT id FROM insiders WHERE name = ? AND company_id = ?
+            """, (name, company_id))
             result = self.cur.fetchone()
             if not result:
                 continue

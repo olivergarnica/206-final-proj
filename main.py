@@ -18,7 +18,7 @@ def main():
         # Process finnhub insider data
         print("\nFetching insider trading data...")
         for cap_level in stock_tickers:
-            print(f"Processing {cap_level} cap stocks:")
+            print(f"Processing {cap_level} stocks:")
             for symbol in stock_tickers[cap_level]:
                 print(f" -- {symbol}", end=" ")
                 
@@ -33,7 +33,7 @@ def main():
         # Process marketstack data
         print("\nFetching stock market data...")
         for cap_level in stock_tickers:
-            print(f"Processing {cap_level} cap stocks:")
+            print(f"Processing {cap_level} stocks:")
             for symbol in stock_tickers[cap_level]:
                 print(f" -- {symbol}", end=" ")
                 
