@@ -8,16 +8,6 @@ class APIdatamanager:
         self._create_tables()  # Set up the database immediately
 
     def _create_tables(self):
-        # # Create the table for each insider
-        # self.cur.execute("""
-        #     CREATE TABLE IF NOT EXISTS insiders (
-        #         id INTEGER PRIMARY KEY AUTOINCREMENT,
-        #         name TEXT,
-        #         symbol TEXT,
-        #         UNIQUE(name, symbol)
-        #     );
-        # """)
-
         # New table to store unique company symbols
         self.cur.execute("""
             CREATE TABLE IF NOT EXISTS companies (

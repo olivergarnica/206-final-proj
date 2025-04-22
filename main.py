@@ -26,7 +26,7 @@ def main():
                     insider_data = get_all_insider_trades(symbol)
                     db_manager.insert_finnhub_data(insider_data, symbol)
                     print("Success")
-                    time.sleep(8)
+                    time.sleep(5)
                 except Exception as e:
                     print(f"Failure (Error: {str(e)})")
         
