@@ -4,12 +4,22 @@ ECONDB_BASE_URL = "https://www.econdb.com/api/series/"
 ECONDB_TOKEN = "9b26b5d5fc3c3cd3bd0aca58d14a871215020ff3"
 
 ECONDB_SERIES = {
-    "RGDPUS": "RGDPUS",  # Real GDP (quarterly)
-    "CPIUS": "CPIUS",    # Consumer Price Index (monthly)
+    "RGDPUS": "RGDPUS",   # Real GDP (quarterly)
+    "CPIUS": "CPIUS",     # Consumer Price Index (monthly)
     "URATEUS": "URATEUS", # Unemployment rate (monthly)
-    "POLIRUS": "POLIRUS", # Fed Short Term Inflation Rate (monthly)
-    "Y10YDUS": "Y10YDUS" # 10-year interest Rate (monthly)
+    "POLIRUS": "POLIRUS", # Short term policy rate (monthly)
+    "Y10YDUS": "Y10YDUS", # 10-year interest Rate (monthly)
+    "PPIUS": "PPIUS",     # Producer Price Index (monthly)
+    "RPUCUS": "RPUCUS",   # Real public consumption (quarterly)
+    "M3YDUS": "M3YDUS",   # 3 month yield (monthly)
+    "GDEBTUS": "GDEBTUS", # Government debt (monthly)
+    "RIMPUS": "RIMPUS",   # Real imports (quarterly)
+    "REXPUS": "REXPUS"    # Real exports (quarterly)
 }
+
+# Group quarterly and monthly series
+QUARTERLY_SERIES = {"RGDPUS", "RPUCUS", "RIMPUS", "REXPUS"}
+MONTHLY_SERIES = {"CPIUS", "URATEUS", "POLIRUS", "Y10YDUS", "PPIUS", "M3YDUS", "GDEBTUS"}
 
 def fetch_econdb_data(series_codes=None):
     if series_codes is None:
@@ -23,20 +33,18 @@ def fetch_econdb_data(series_codes=None):
         if response.status_code == 200:
             json_data = response.json()
 
-            # Process differently based on the code
             dates = json_data["data"]["dates"]
             values = json_data["data"]["values"]
 
-            if code == "RGDPUS":
-                # Get latest 4 quarters
-                dates = dates[-4:]
+            # Trim based on frequency
+            if code in QUARTERLY_SERIES:
+                dates = dates[-4:]  # Latest 4 quarters
                 values = values[-4:]
-            elif code in ("CPIUS", "URATEUS", "POLIRUS", "Y10YDUS"):
-                # Get latest 12 months
-                dates = dates[-12:]
+            elif code in MONTHLY_SERIES:
+                dates = dates[-12:]  # Latest 12 months
                 values = values[-12:]
 
-            # Overwrite the json_data with trimmed data
+            # Save the trimmed data
             json_data["data"]["dates"] = dates
             json_data["data"]["values"] = values
 
