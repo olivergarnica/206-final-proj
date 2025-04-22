@@ -9,9 +9,10 @@ def calculate_and_write_pnl(db_path="all_data.db", output_path="trade_pnls.txt")
     print("Calculating 1 week PnL for insider trades (Sales and Purchases only)...")
 
     cur.execute("""
-        SELECT t.id, i.symbol, i.name, t.transaction_date, t.avg_transaction_price, t.change_of_shares, t.transaction_code
+        SELECT t.id, c.symbol, i.name, t.transaction_date, t.avg_transaction_price, t.change_of_shares, t.transaction_code
         FROM insider_trades t
         JOIN insiders i ON t.insider_id = i.id
+        JOIN companies c ON i.company_id = c.id
         WHERE t.transaction_code IN ('S', 'P')
     """)
     trades = cur.fetchall()

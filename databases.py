@@ -101,12 +101,12 @@ class APIdatamanager:
                 break
 
             name = entry.get("name")
-            position = entry.get("position") or "Unknown"
+            # position = entry.get("position") or "Unknown"
 
             self.cur.execute("""
-                INSERT OR IGNORE INTO insiders (name, company_id, position)
-                VALUES (?, ?, position)
-            """, (name, company_id, position))
+                INSERT OR IGNORE INTO insiders (name, company_id)
+                VALUES (?, ?)
+            """, (name, company_id))
 
             self.cur.execute("""
                 SELECT id FROM insiders WHERE name = ? AND company_id = ?
