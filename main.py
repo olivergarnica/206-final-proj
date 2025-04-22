@@ -1,7 +1,7 @@
 # Group Name: Kappa
 # Group Members: Kanishk, Kibrom, Oliver
 import os
-from insider import fetch_finnhub_transactions, stock_tickers, FH_KEY
+from insider import get_all_insider_trades, stock_tickers, FH_KEY
 from databases import APIdatamanager
 from econ import fetch_econdb_data
 from marketstack import fetch_marketstack_data
@@ -23,10 +23,10 @@ def main():
                 print(f" -- {symbol}", end=" ")
                 
                 try:
-                    insider_data = fetch_finnhub_transactions(symbol, FH_KEY)
-                    db_manager.insert_finnhub_data(insider_data)
+                    insider_data = get_all_insider_trades(symbol)
+                    db_manager.insert_finnhub_data(insider_data, symbol)
                     print("Success")
-                    time.sleep(4)
+                    time.sleep(8)
                 except Exception as e:
                     print(f"Failure (Error: {str(e)})")
         
@@ -41,7 +41,7 @@ def main():
                     market_data = fetch_marketstack_data(symbol)
                     db_manager.insert_marketstack_data(market_data)
                     print("Success")
-                    time.sleep(2)
+                    time.sleep(10)
                 except Exception as e:
                     print(f"Failure (Error: {str(e)})")
         
@@ -55,19 +55,12 @@ def main():
             db_manager.conn.commit()
         except Exception as e:
             print(f"Failed to save economic data: {str(e)}")
-
-    #     print("\nAll data processed successfully!")
-    #     print("Database saved to: all_data.db")
-
-    # finally:
-    #     db_manager.close()
-
-    # Call analysis 
+        
         calculate_and_write_pnl(db_path="all_data.db", output_path="trade_pnls.txt")
         analyze_pnls_by_company(pnl_file_path="trade_pnls.txt", output_path="company_pnl_summary.txt")
         print("\nAll data processed successfully!")
         print("Database saved to: all_data.db")
-
+        
     finally:
         db_manager.close()
 

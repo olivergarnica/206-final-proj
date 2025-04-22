@@ -61,21 +61,20 @@ class APIdatamanager:
             );
         """)
 
-    def insert_finnhub_data(self, api_response):
-        symbol = api_response.get("symbol")
-        transactions = api_response.get("data", [])
+    def insert_finnhub_data(self, transactions, symbol):
+        inserts_done = 0
+        for entry in sorted(transactions, key=lambda x: x.get("transactionDate")):
+            if inserts_done >= 25:
+                break
 
-        for entry in transactions[:25]: 
             name = entry.get("name")
             position = entry.get("position") or "Unknown"
 
-            # Insert or ignore the insider
             self.cur.execute("""
                 INSERT OR IGNORE INTO insiders (name, symbol)
                 VALUES (?, ?)
             """, (name, symbol))
 
-            # Get the insider's ID
             self.cur.execute("""
                 SELECT id FROM insiders WHERE name = ? AND symbol = ?
             """, (name, symbol))
@@ -85,7 +84,6 @@ class APIdatamanager:
 
             insider_id = result[0]
 
-            # Insert trade into insider_trades
             self.cur.execute("""
                 INSERT OR IGNORE INTO insider_trades
                 (insider_id, num_shares_after, change_of_shares, avg_transaction_price, transaction_date, filing_date, transaction_code)
@@ -99,6 +97,9 @@ class APIdatamanager:
                 entry.get("filingDate"),
                 entry.get("transactionCode")
             ))
+
+            if self.cur.rowcount > 0:
+                inserts_done += 1
 
     def insert_econdb_data(self, data, limit=25):
         for series_json in data.get("series", []):
@@ -124,7 +125,7 @@ class APIdatamanager:
     def insert_marketstack_data(self, data):
         entries = data.get("data", [])
 
-        for entry in entries[:25]:
+        for entry in entries:
             self.cur.execute("""
                 INSERT OR IGNORE INTO market_data 
                 (symbol, date, open, high, low, close, volume, exchange)

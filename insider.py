@@ -1,34 +1,29 @@
 import requests
-import finnhub
-
 from datetime import date, timedelta
 
+# Finnhub API setup
 FH_KEY = "cvvi5n1r01qi0bq5g0c0cvvi5n1r01qi0bq5g0cg"
-finnhub_client = finnhub.Client(FH_KEY)
+START_DATE = "2024-05-10"
+END_DATE = "2025-04-15"
 
 # Stock tickers by cap level
 stock_tickers = {
     "Highcap": ["AAPL", "MSFT", "GOOGL", "META"],
     "Midcap": ["DOCU", "TWLO", "ZM", "TEAM"],
-    "Lowcap": ["PLTR", "SMG", "ADBE"]
+    "Lowcap": ["PLTR", "ADBE"]
 }
 
-def fetch_finnhub_transactions(symbol, api_key, from_date=None, to_date=None, limit=25):
+def get_all_insider_trades(symbol):
     url = "https://finnhub.io/api/v1/stock/insider-transactions"
     params = {
         "symbol": symbol,
-        "token": api_key,
-        "limit": limit
+        "token": FH_KEY,
+        "from": START_DATE,
+        "to": END_DATE
     }
 
-    if from_date:
-        params["from"] = from_date
-    if to_date:
-        params["to"] = to_date
-
     response = requests.get(url, params=params)
-    if response.status_code == 200:
-        return response.json()
-    else:
-        print(f"Error fetching {symbol}: {response.status_code}")
-        return {"data": [], "symbol": symbol}
+    response.raise_for_status()
+
+    data = response.json().get("data", [])
+    return data
