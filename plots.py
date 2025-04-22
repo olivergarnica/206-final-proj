@@ -35,6 +35,7 @@ ax3.set_title("Average PnL vs Number of Trades by Company")
 plt.tight_layout()
 plt.show()
 
+############## 4th PLOT WE ADDED ##############
 # Line chart of stock closing prices over time
 db_path = "all_data.db"
 conn = sqlite3.connect(db_path)
